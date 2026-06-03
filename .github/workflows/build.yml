@@ -20,7 +20,7 @@ defaults:
 jobs:
   build:
     name: Build ${{matrix.target}}
-    runs-on: ubuntu-latest
+    runs-on: ${{matrix.runner}}
     permissions:
       contents: read
     strategy:

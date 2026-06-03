@@ -2,10 +2,13 @@ using UnityEngine;
 
 public class BuildLogger : MonoBehaviour
 {
+  [SerializeField] private TMPro.TextMeshProUGUI text;
   void Awake()
   {
-    Debug.Log($"Unity Version: {Application.unityVersion}");
-    Debug.Log($"Scripting Backend: {GetScriptingBackend()}");
+
+    text.SetText($"Unity Version: {Application.unityVersion}\nScripting Backend: {GetScriptingBackend()}");
+    // Debug.Log($"Unity Version: {Application.unityVersion}");
+    // Debug.Log($"Scripting Backend: {GetScriptingBackend()}");
   }
 
   static string GetScriptingBackend()

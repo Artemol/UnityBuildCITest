@@ -84,8 +84,8 @@ jobs:
       - name: Package artifacts
         run: |
           cd dist
-          zip -r ../${{env.GAME_NAME}}-Windows.zip $${{env.GAME_NAME}}-StandaloneWindows64
-          zip -r ../${{env.GAME_NAME}}-macOS.zip $${{env.GAME_NAME}}-StandaloneOSX
+          zip -r ../${{env.GAME_NAME}}-Windows.zip ${{env.GAME_NAME}}-StandaloneWindows64
+          zip -r ../${{env.GAME_NAME}}-macOS.zip ${{env.GAME_NAME}}-StandaloneOSX
       - name: Create draft release
         env:
           GH_TOKEN: ${{github.token}}

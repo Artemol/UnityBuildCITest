@@ -50,12 +50,15 @@ jobs:
         with:
           targetPlatform: ${{matrix.target}}
           buildName: ${{env.GAME_NAME}}
-      - name: Add README
+      - name: Normalize build output
         run: |
+          BUILD_DIR="build/${{matrix.target}}"
+          rm -rf "$BUILD_DIR/${{env.GAME_NAME}}_BackUpThisFolder_ButDontShipItWithYourGame"
+          
           if [ -f README.md ]; then
-            cp README.md build/README.md
+            cp README.md "$BUILD_DIR/README.md"
           elif [ -f README.txt ]; then
-            cp README.txt build/README.txt
+            cp README.txt "$BUILD_DIR/README.txt"
           else
             echo "No README found; skipping."
           fi
@@ -66,7 +69,7 @@ jobs:
       - uses: actions/upload-artifact@v6
         with:
           name: ${{env.GAME_NAME}}-${{matrix.target}}
-          path: build
+          path: build/${{matrix.target}}
   releases:
     name: Create Draft Release
     runs-on: ubuntu-latest

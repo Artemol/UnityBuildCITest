@@ -59,14 +59,14 @@ jobs:
           else
             echo "No README found; skipping."
           fi
-      - name: Package Build
-        run: |
-          cd build
-          zip -r "../${{env.GAME_NAME}}-${{matrix.target}}.zip" .
+      # - name: Package Build
+      #   run: |
+      #     cd build
+      #     zip -r "../${{env.GAME_NAME}}-${{matrix.target}}.zip" .
       - uses: actions/upload-artifact@v6
         with:
           name: ${{env.GAME_NAME}}-${{matrix.target}}
-          path: ${{env.GAME_NAME}}-${{matrix.target}}.zip
+          path: build
   releases:
     name: Create Draft Release
     runs-on: ubuntu-latest
@@ -81,13 +81,17 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           path: dist
-          merge-multiple: true
+      - name: Package artifacts
+        run: |
+          cd dist
+          zip -r ../${{env.GAME_NAME}}-Windows.zip $${{env.GAME_NAME}}-StandaloneWindows64
+          zip -r ../${{env.GAME_NAME}}-macOS.zip $${{env.GAME_NAME}}-StandaloneOSX
       - name: Create draft release
         env:
           GH_TOKEN: ${{github.token}}
         run: |
           gh release create "ci-${{github.run_number}}" \
-            dist/*.zip \
+            ./*.zip \
             --draft \
             --title "CI Build ${{github.run_number}}" \
             --notes "Automated CI build from ${{github.sha}}"

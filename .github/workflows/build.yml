@@ -53,12 +53,8 @@ jobs:
       - name: Normalize build output
         run: |
           BUILD_DIR="build/${{matrix.target}}"
-          DONT_SHIP="$BUILD_DIR/${{env.GAME_NAME}}_BackUpThisFolder_ButDontShipItWithYourGame"
-          
-          if [ -d "$DONT_SHIP" ]; then
-            echo "Removing: $DONT_SHIP"
-            rm -rf "$DONT_SHIP"
-          fi
+          rm -rf "$BUILD_DIR/${{env.GAME_NAME}}_BackUpThisFolder_ButDontShipItWithYourGame"
+          rm -rf "$BUILD_DIR/${{env.GAME_NAME}}_BurstDebugInformation_DoNotShip"
           
           if [ -f README.md ]; then
             cp README.md "$BUILD_DIR/README.md"
@@ -70,12 +66,13 @@ jobs:
       - name: Remove macOS quarantine attributes
         if: matrix.target == 'StandaloneOSX'
         run: |
-          BUILD_DIR="build/${{ matrix.target }}"
-          xattr -dr com.apple.quarantine "$BUILD_DIR" || true
+          BUILD_APP="build/${{ matrix.target }}/${{ env.GAME_NAME }}"
+          xattr -dr com.apple.quarantine "$BUILD_APP" || true
       - name: Package macOS build
         if: matrix.target == 'StandaloneOSX'
         run: |
-          cd "build/${{ matrix.target }}"
+          mv "build/${{ matrix.target }}" "build/${{ env.GAME_NAME }}"
+          cd "build/${{ env.GAME_NAME }}"
           ditto -c -k --sequesterRsrc --keepParent . "../../${{ env.GAME_NAME }}-macOS.zip"
       - name: Package Windows build
         if: matrix.target == 'StandaloneWindows64'

@@ -79,6 +79,7 @@ jobs:
           ditto -c -k --sequesterRsrc --keepParent . "../../${{ env.GAME_NAME }}-macOS.zip"
       - name: Package Windows build
         if: matrix.target == 'StandaloneWindows64'
+        shell: pwsh
         run: |
           Compress-Archive -Path build\StandaloneWindows64\* -DestinationPath ${{ env.GAME_NAME }}-Windows.zip
       - uses: actions/upload-artifact@v6

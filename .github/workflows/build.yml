@@ -66,7 +66,7 @@ jobs:
       - name: Remove macOS quarantine attributes
         if: matrix.target == 'StandaloneOSX'
         run: |
-          BUILD_APP="build/${{ matrix.target }}/${{ env.GAME_NAME }}"
+          BUILD_APP="build/${{ matrix.target }}/${{ env.GAME_NAME }}.app"
           xattr -dr com.apple.quarantine "$BUILD_APP" || true
       - name: Package macOS build
         if: matrix.target == 'StandaloneOSX'

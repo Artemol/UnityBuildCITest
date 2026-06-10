@@ -61,11 +61,6 @@ jobs:
           else
             echo "No README found; skipping."
           fi
-      - name: Remove macOS quarantine attributes
-        if: matrix.target == 'StandaloneOSX'
-        run: |
-          BUILD_APP="build/${{ matrix.target }}/${{ env.GAME_NAME }}.app"
-          xattr -dr com.apple.quarantine "$BUILD_APP"
       - name: Package macOS build
         if: matrix.target == 'StandaloneOSX'
         run: |
@@ -76,7 +71,8 @@ jobs:
         if: matrix.target == 'StandaloneWindows64'
         shell: pwsh
         run: |
-          Compress-Archive -Path build\StandaloneWindows64\* -DestinationPath ${{ env.GAME_NAME }}-Windows.zip
+          Move-Item "build/${{ matrix.target }}" "build/${{ env.GAME_NAME }}"
+          Compress-Archive -Path "build\${{ env.GAME_NAME }}" -DestinationPath ${{ env.GAME_NAME }}-Windows.zip
       - uses: actions/upload-artifact@v6
         with:
           name: ${{ env.GAME_NAME }}-${{ matrix.target }}
@@ -101,7 +97,7 @@ jobs:
         env:
           GH_TOKEN: ${{github.token}}
         run: |
-          gh release create "ci-${{ github.run_number }}" \
+          gh release create "ci-${{ github.run_number }}.${{ github.run_attempt }}" \
             ./dist/*.zip \
             --repo "${{ github.repository }}" \
             --draft \

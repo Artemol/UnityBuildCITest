@@ -32,14 +32,12 @@ jobs:
             runner: macos-latest
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
       - uses: actions/cache@v5
         with:
           path: ./Library
-          key: Library-${{env.GAME_NAME}}-${{matrix.target}}
+          key: Library-${{env.GAME_NAME}}-${{matrix.target}}-${{ hashFiles('ProjectSettings/ProjectVersion.txt', 'Packages/packages-lock.json') }}
           restore-keys: |
-            Library-${{env.GAME_NAME}}-${{matrix.target}}
+            Library-${{env.GAME_NAME}}-${{matrix.target}}-
             Library-${{env.GAME_NAME}}-
             Library-
       - uses: game-ci/unity-builder@v4
@@ -53,8 +51,8 @@ jobs:
       - name: Normalize build output
         run: |
           BUILD_DIR="build/${{matrix.target}}"
-          rm -rf "$BUILD_DIR/*_BackUpThisFolder_ButDontShipItWithYourGame"
-          rm -rf "$BUILD_DIR/*_BurstDebugInformation_DoNotShip"
+          rm -rf "$BUILD_DIR"/*_BackUpThisFolder_ButDontShipItWithYourGame
+          rm -rf "$BUILD_DIR"/*_BurstDebugInformation_DoNotShip
           
           if [ -f README.md ]; then
             cp README.md "$BUILD_DIR/README.md"
@@ -92,8 +90,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
       - uses: actions/download-artifact@v8
         with:
           path: dist

@@ -53,8 +53,8 @@ jobs:
       - name: Normalize build output
         run: |
           BUILD_DIR="build/${{matrix.target}}"
-          rm -rf "$BUILD_DIR/${{env.GAME_NAME}}_BackUpThisFolder_ButDontShipItWithYourGame"
-          rm -rf "$BUILD_DIR/${{env.GAME_NAME}}_BurstDebugInformation_DoNotShip"
+          rm -rf "$BUILD_DIR/*_BackUpThisFolder_ButDontShipItWithYourGame"
+          rm -rf "$BUILD_DIR/*_BurstDebugInformation_DoNotShip"
           
           if [ -f README.md ]; then
             cp README.md "$BUILD_DIR/README.md"
@@ -67,7 +67,7 @@ jobs:
         if: matrix.target == 'StandaloneOSX'
         run: |
           BUILD_APP="build/${{ matrix.target }}/${{ env.GAME_NAME }}.app"
-          xattr -dr com.apple.quarantine "$BUILD_APP" || true
+          xattr -dr com.apple.quarantine "$BUILD_APP"
       - name: Package macOS build
         if: matrix.target == 'StandaloneOSX'
         run: |
